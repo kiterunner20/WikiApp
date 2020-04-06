@@ -23,7 +23,7 @@ public class LocalDatabase {
         for (WikiResult.DataList wikiData : dataList) {
             appDataBase.wikiCacheDao().
                     upsert(new WikiDataEntity(wikiData.pageId(), wikiData.title(),
-                            wikiData.imageUrl(), wikiData.description()));
+                            wikiData.imageUrl(), wikiData.width(), wikiData.height(), wikiData.description()));
         }
     }
 

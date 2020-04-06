@@ -13,15 +13,13 @@ import androidx.fragment.app.Fragment;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseFragment extends Fragment implements BaseView {
+public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDependencies();
-        initViewModels();
-        initObservers();
-        initDataCalls();
+
     }
 
     @Nullable
@@ -42,6 +40,9 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initViewModels();
+        initObservers();
+        initDataCalls();
         onReady(savedInstanceState);
     }
 
@@ -62,28 +63,4 @@ public abstract class BaseFragment extends Fragment implements BaseView {
 
     protected abstract void onReady(Bundle savedInstanceState);
 
-    @Override
-    public void showToast(int resId) {
-        Toast.makeText(getContext(), resId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showContent() {
-
-    }
-
-    @Override
-    public void showError(String errorMessage) {
-
-    }
-
-    @Override
-    public void showToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showProgress() {
-
-    }
 }

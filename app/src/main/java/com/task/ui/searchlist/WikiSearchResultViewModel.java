@@ -33,6 +33,8 @@ public class WikiSearchResultViewModel extends BaseViewModel {
 
     public void getWikiData(String query, boolean isOnline) {
 
+        onLoading();
+
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
@@ -61,7 +63,7 @@ public class WikiSearchResultViewModel extends BaseViewModel {
         wikiMutableLiveData.postValue(WikiViewState.SUCCESS_STATE);
     }
 
-    public void onLoading(WikiResult wikiResult) {
+    public void onLoading() {
         wikiMutableLiveData.postValue(WikiViewState.LOADING_STATE);
     }
 
@@ -72,7 +74,7 @@ public class WikiSearchResultViewModel extends BaseViewModel {
 
     public void onError(Throwable throwable) {
         Log.e(TAG, throwable.toString());
-        WikiViewState.FAILED_STATE.setError("Unknown Error Occurred!");
+        WikiViewState.FAILED_STATE.setError("Unknown Error Occurred!Please check your internet connection or check the search query!");
         wikiMutableLiveData.postValue(WikiViewState.FAILED_STATE);
     }
 

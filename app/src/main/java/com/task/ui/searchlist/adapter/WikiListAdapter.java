@@ -56,12 +56,18 @@ public class WikiListAdapter extends RecyclerView.Adapter<WikiListAdapter.ViewHo
     public void onBindViewHolder(@NonNull WikiListAdapter.ViewHolder holder, int position) {
         holder.tvTitle.setText(wikiDataList.get(position).title());
         holder.tvDescription.setText(wikiDataList.get(position).description());
-        holder.tvId.setText("Id :" + wikiDataList.get(position).pageId());
-        Glide.with(holder.imageWiki.getContext())
-                .load(wikiDataList.get(position).imageUrl())
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(holder.imageWiki);
+        holder.tvId.setText("ID : " + wikiDataList.get(position).pageId());
+
+        if(wikiDataList.get(position).imageUrl().equals("")){
+            holder.imageWiki.setImageResource(R.drawable.wikiimage);
+        }else{
+            Glide.with(holder.imageWiki.getContext())
+                    .load(wikiDataList.get(position).imageUrl())
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .into(holder.imageWiki);
+        }
+
     }
 
     @Override

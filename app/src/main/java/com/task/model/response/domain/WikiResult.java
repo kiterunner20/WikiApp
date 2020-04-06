@@ -30,9 +30,9 @@ public abstract class WikiResult implements Parcelable {
     @AutoValue
     public abstract static class DataList implements Parcelable {
 
-        public static DataList create(int pageId, String title, String imageUrl,
+        public static DataList create(int pageId, String title, String imageUrl, int width, int height,
                                       String description) {
-            return new AutoValue_WikiResult_DataList(pageId, title, imageUrl, description);
+            return new AutoValue_WikiResult_DataList(pageId, title, imageUrl, width, height, description);
         }
 
         public abstract int pageId();
@@ -42,6 +42,10 @@ public abstract class WikiResult implements Parcelable {
 
         @Nullable
         public abstract String imageUrl();
+
+        public abstract int width();
+
+        public abstract int height();
 
         @Nullable
         public abstract String description();

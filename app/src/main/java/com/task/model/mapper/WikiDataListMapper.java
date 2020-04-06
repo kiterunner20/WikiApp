@@ -31,11 +31,15 @@ public class WikiDataListMapper {
                         for (Page page : wikiData.getQuery().getPages()) {
 
                             String thumbnail = "";
+                            int width = 0;
+                            int height = 0;
                             StringBuffer description = new StringBuffer();
 
                             if (page.getThumbnail() != null) {
                                 if (page.getThumbnail().getSource() != null) {
                                     thumbnail = page.getThumbnail().getSource();
+                                    width = page.getThumbnail().getWidth();
+                                    height = page.getThumbnail().getHeight();
                                 }
                             }
 
@@ -52,7 +56,7 @@ public class WikiDataListMapper {
                             }
 
                             dataList.add(WikiResult.DataList.create(page.getPageid(), page.getTitle(),
-                                    thumbnail, description.toString()));
+                                    thumbnail, width, height, description.toString()));
 
                         }
 
@@ -82,7 +86,7 @@ public class WikiDataListMapper {
 
             for (WikiDataEntity wikiDataEntity : wikiDataEntities) {
                 dataLists.add(WikiResult.DataList.create(wikiDataEntity.pageId, wikiDataEntity.title,
-                        wikiDataEntity.imageUrl, wikiDataEntity.description));
+                        wikiDataEntity.imageUrl, wikiDataEntity.width, wikiDataEntity.height, wikiDataEntity.description));
             }
 
             return dataLists;

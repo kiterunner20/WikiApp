@@ -1,18 +1,15 @@
 package com.task.ui.searchlist;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,13 +20,16 @@ import com.task.R;
 import com.task.base.BaseFragment;
 import com.task.base.ViewModelFactory;
 import com.task.model.response.domain.WikiResult;
+import com.task.ui.WikiActivity;
 import com.task.ui.searchlist.adapter.WikiListAdapter;
+import com.task.ui.wikisourceview.WikiSourceWebViewFragment;
 import com.task.util.NetworkManager;
 
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnTextChanged;
 
 public class WikiSearchResultFragment extends BaseFragment implements WikiListAdapter.WikiResultItemSelectedListner {
 
@@ -41,12 +41,18 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     TextView tvError;
     @BindView(R.id.progressbar)
     ProgressBar progressBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.toolbar_title)
+    TextView tvTitle;
+    @BindView(R.id.edt_search_text)
+    EditText etSearchText;
     @Inject
     ViewModelFactory viewModelFactory;
     private WikiSearchResultViewModel viewModel;
     private WikiResult wikiResult;
-    private boolean isLoading;
     private WikiListAdapter adapter;
+    boolean intialCacheLoading;
 
     public static WikiSearchResultFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,67 +67,33 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query != null) {
-                    viewModel.getWikiData(query, NetworkManager.isNetworkAvailable(getContext()));
-                    progressBar.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-//                if (newText.length() > 0) {
-//                    viewModel.getWikiData(newText, NetworkManager.isNetworkAvailable(getContext()));
-//                }
-                return false;
-            }
-        });
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void initDataCalls() {
+
     }
 
     @Override
     protected void initObservers() {
         viewModel.getNewsMutableLiveData().observe(this, wikiViewState -> {
-            isLoading = false;
 
             switch (wikiViewState.getCurrentState()) {
 
                 case LOADING:
-                    Log.d(TAG, "Loading");
-                    progressBar.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                    tvError.setVisibility(View.GONE);
+                    maintainUi(true, false, false);
                     break;
 
                 case FAILED:
-                    Log.e(TAG, "Failed " + wikiViewState.getError());
-                    progressBar.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
-                    tvError.setVisibility(View.VISIBLE);
+
+                    maintainUi(false, true, false);
                     tvError.setText(wikiViewState.getError());
                     break;
                 case SUCCESS:
-                    progressBar.setVisibility(View.GONE);
-                    tvError.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
+
+                    maintainUi(false, false, true);
 
                     if (adapter != null && wikiViewState.getData() != null &&
                             wikiViewState.getData().isSuccess()) {
@@ -131,15 +103,24 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
                         }
                     }
 
+                    if (!intialCacheLoading) {
+                        if (etSearchText.getText().toString().length() == 0) {
+                            recyclerView.setVisibility(View.GONE);
+                        }
+                    }
+
                     break;
             }
 
         });
     }
 
+
     @Override
     protected void initViewModels() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(WikiSearchResultViewModel.class);
+        if (null == viewModel) {
+            viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WikiSearchResultViewModel.class);
+        }
     }
 
 
@@ -151,13 +132,49 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
 
     @Override
     protected void onReady(Bundle savedInstanceState) {
+        tvTitle.setText("Wikipedia");
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
     }
 
+
+    @OnTextChanged(R.id.edt_search_text)
+    void onTextChanged() {
+        if (etSearchText.getText().toString().length() > 0) {
+            String query = etSearchText.getText().toString();
+            viewModel.getWikiData(query, NetworkManager.isNetworkAvailable(getContext()));
+            intialCacheLoading = false;
+        } else {
+            recyclerView.setVisibility(View.GONE);
+        }
+    }
+
+
     @Override
     public void onItemSelected(int selectedItemPosition) {
+        ((WikiActivity) getActivity()).replaceFragment(
+                WikiSourceWebViewFragment.newInstance(adapter.getWikiData().get(selectedItemPosition).title()));
+    }
+
+    private void maintainUi(boolean isLoading, boolean isError, boolean isSuccess) {
+
+        if (isLoading) {
+            progressBar.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            tvError.setVisibility(View.GONE);
+        } else if (isError) {
+            tvError.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+        } else if (isSuccess) {
+
+            recyclerView.setVisibility(View.VISIBLE);
+            tvError.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+        }
 
     }
+
+
 }
