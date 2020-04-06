@@ -1,10 +1,12 @@
 package com.task.model.mapper;
 
+import com.task.data.db.entity.WikiDataEntity;
 import com.task.model.response.domain.WikiResult;
 import com.task.model.response.dto.Page;
 import com.task.model.response.dto.WikiData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.functions.Function;
 
@@ -73,6 +75,17 @@ public class WikiDataListMapper {
     }
 
 
+    public static Function<List<WikiDataEntity>, List<WikiResult.DataList>> mapDataEntityToDomain() {
+        return wikiDataEntities -> {
 
+            List<WikiResult.DataList> dataLists = new ArrayList<>();
 
+            for (WikiDataEntity wikiDataEntity : wikiDataEntities) {
+                dataLists.add(WikiResult.DataList.create(wikiDataEntity.pageId, wikiDataEntity.title,
+                        wikiDataEntity.imageUrl, wikiDataEntity.description));
+            }
+
+            return dataLists;
+        };
+    }
 }

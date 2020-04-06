@@ -27,6 +27,9 @@ public class Repository {
                 query, 10)
                 .subscribeOn(Schedulers.io())
                 .map(WikiDataListMapper.mapDtoDataToDomain())
-                .map(wikiResult -> wikiResult);
+                .map(wikiResult -> {
+                    localDatabase.insertWikiResultsToDb(wikiResult.dataList());
+                    return wikiResult;
+                });
     }
 }

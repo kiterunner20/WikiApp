@@ -6,12 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +26,6 @@ import com.task.model.response.domain.WikiResult;
 import com.task.ui.searchlist.adapter.WikiListAdapter;
 import com.task.util.NetworkManager;
 
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -40,6 +39,8 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     RecyclerView recyclerView;
     @BindView(R.id.tv_error)
     TextView tvError;
+    @BindView(R.id.progressbar)
+    ProgressBar progressBar;
     @Inject
     ViewModelFactory viewModelFactory;
     private WikiSearchResultViewModel viewModel;
@@ -70,6 +71,8 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
             public boolean onQueryTextSubmit(String query) {
                 if (query != null) {
                     viewModel.getWikiData(query, NetworkManager.isNetworkAvailable(getContext()));
+                    progressBar.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
                 return false;
             }
@@ -103,17 +106,22 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
 
                 case LOADING:
                     Log.d(TAG, "Loading");
+                    progressBar.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                    tvError.setVisibility(View.GONE);
                     break;
 
                 case FAILED:
                     Log.e(TAG, "Failed " + wikiViewState.getError());
+                    progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
-                    tvError.setVisibility(View.GONE);
+                    tvError.setVisibility(View.VISIBLE);
                     tvError.setText(wikiViewState.getError());
                     break;
                 case SUCCESS:
-                    recyclerView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
                     tvError.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
 
                     if (adapter != null && wikiViewState.getData() != null &&
                             wikiViewState.getData().isSuccess()) {

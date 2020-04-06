@@ -21,7 +21,8 @@ public class DataManager {
 
         if (isOnline) {
             return repository.getWikiData(query);
+        }else{
+            return localDataBase.getWikiDataFromDb(query);
         }
-        return null;
     }
 }
