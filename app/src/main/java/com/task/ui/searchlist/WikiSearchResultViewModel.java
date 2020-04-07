@@ -23,6 +23,12 @@ public class WikiSearchResultViewModel extends BaseViewModel {
     MutableLiveData<WikiViewState> wikiMutableLiveData = new MutableLiveData<>();
     private Disposable disposable;
 
+    /***
+     * Construction injection for viewmodel
+     * @param dataManager
+     * @param rxSingleSchedulers
+     */
+
     @Inject
     public WikiSearchResultViewModel(DataManager dataManager, RxSingleSchedulers rxSingleSchedulers) {
 
@@ -61,6 +67,11 @@ public class WikiSearchResultViewModel extends BaseViewModel {
 
         addCompositeDisposable(disposable);
     }
+
+    /***
+     *Generic functions to update the ViewState so that when View observes to livedata,
+     * the changes can be updated from here.
+     */
 
     public void onSuccess(WikiResult wikiResult) {
         WikiViewState.SUCCESS_STATE.setData(wikiResult);

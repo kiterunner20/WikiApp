@@ -20,6 +20,14 @@ public class Repository {
         this.localDatabase = localDatabase;
     }
 
+    /***
+     * Calling remote service.
+     * @param query
+     * The result will be passed to mapper using <map></> operator, and the resultant data will
+     * be inserted to the database
+     * @return  Single<WikiResult></WikiResult>
+     *
+     */
 
     public Single<WikiResult> getWikiData(String query) {
         return remoteService.getWikiData("query", "json", "pageimages|pageterms", "prefixsearch",

@@ -3,6 +3,10 @@ package com.task.ui.searchlist;
 import com.task.base.BaseViewState;
 import com.task.model.response.domain.WikiResult;
 
+/**
+ * Class for maintaining state from Updating the API.
+ */
+
 public class WikiViewState  extends  BaseViewState<WikiResult>{
 
     public static final WikiViewState SUCCESS_STATE = new WikiViewState(null, State.SUCCESS, null);

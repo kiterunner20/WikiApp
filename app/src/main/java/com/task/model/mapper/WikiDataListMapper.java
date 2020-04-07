@@ -10,11 +10,21 @@ import java.util.List;
 
 import io.reactivex.functions.Function;
 
+/***
+ *
+ * Class to map the raw data from API / CACHE to the corresponding Autovalue parcelable class.
+ */
 
 public class WikiDataListMapper {
 
     private static final String TAG = WikiDataListMapper.class.getSimpleName();
     public static final String NO_DATA_FOUND = "No data found";
+
+
+    /***
+     * Mapping the GSON data from the API to the WikiResult class.
+     * @return WikiResult
+     */
 
     public static Function<WikiData, WikiResult> mapDtoDataToDomain() {
 
@@ -78,6 +88,10 @@ public class WikiDataListMapper {
 
     }
 
+    /***
+     * Maps data from enitity to the parcelable class
+     * @return WikiResult.DataList
+     */
 
     public static Function<List<WikiDataEntity>, List<WikiResult.DataList>> mapDataEntityToDomain() {
         return wikiDataEntities -> {

@@ -10,7 +10,6 @@ public class WikiData {
     @Expose
     private Query query;
 
-
     public Query getQuery() {
         return query != null ? query : null;
     }

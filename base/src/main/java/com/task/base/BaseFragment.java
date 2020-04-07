@@ -15,6 +15,12 @@ import com.evernote.android.state.StateSaver;
 
 import butterknife.ButterKnife;
 
+/**
+ * This class handles the lifecycle related things and act as a generic class,
+ * the corresponding fragments can extend this class which reduces maintaining thing sepearately
+ * for each fragment.
+ */
+
 public abstract class BaseFragment extends Fragment {
 
     @Override

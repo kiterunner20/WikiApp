@@ -10,6 +10,10 @@ import com.task.base.BaseFragment;
 import butterknife.BindView;
 
 
+/**
+ * Fragment for loading webview
+ */
+
 public class WikiSourceWebViewFragment extends BaseFragment {
 
     private static final String TITLE = "webview_title";

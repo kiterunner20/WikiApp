@@ -30,6 +30,13 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Class with annotations from dagger which will provide the instance to the corresponding classes.
+ * All the instances will be provided and which avoid the problem of hard dependency.
+ *
+ * @SingleTon will annotate to create a singleton class so that it can be provided via Dagger injection
+ */
+
 @Module(includes = {ViewModelModule.class}) public class AppModule {
 
     @Provides Context provideContext(App app) {
@@ -83,11 +90,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
                         .addNetworkInterceptor(interceptor).build();
     }
 
+    /***
+     * Retrofit instance will be created . RxJava2CallAdapterFactory convert to the convert to
+     * POJO classes.
+     * @param okHttpClient
+     * @return
+     */
+
     @Provides @Singleton Retrofit.Builder provideRetrofitBuilder(OkHttpClient okHttpClient) {
         return new Retrofit.Builder().client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new Gson()));
     }
+
+
 
     @Provides @Singleton Retrofit provideRetrofit(Retrofit.Builder builder) {
         return builder.baseUrl("https://en.wikipedia.org//").build();

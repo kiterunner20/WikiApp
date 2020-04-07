@@ -18,6 +18,12 @@ public class LocalDatabase {
         this.appDataBase = appDatabase;
     }
 
+
+    /***
+     * Insertion of search results from API to the DB.
+     * @param dataList
+     */
+
     public void insertWikiResultsToDb(ArrayList<WikiResult.DataList> dataList) {
 
         for (WikiResult.DataList wikiData : dataList) {
@@ -26,6 +32,12 @@ public class LocalDatabase {
                             wikiData.imageUrl(), wikiData.width(), wikiData.height(), wikiData.description()));
         }
     }
+
+    /***
+     * Resultant data which is obtained from the db based on the query will be passed back
+     * @param query
+     * @return Single<WikiResult></>
+     */
 
     public Single<WikiResult> getWikiDataFromDb(String query) {
         return appDataBase.wikiCacheDao().getWikiData(query)

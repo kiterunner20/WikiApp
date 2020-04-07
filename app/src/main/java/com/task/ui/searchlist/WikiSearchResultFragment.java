@@ -76,15 +76,15 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
         return R.layout.fragment_search_result;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void initDataCalls() {
 
     }
+
+    /**
+     * Observes to livedata , changes made in UI according
+     */
 
     @Override
     protected void initObservers() {
@@ -123,14 +123,21 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
         });
     }
 
+    /**
+     * Viewmodel intiallization . In the factory it will check for the viewmodel instance.
+     * On config changes it will supply the same viewmodel.So that viewmodel won't be
+     * created every time
+     */
 
     @Override
     protected void initViewModels() {
-        if (null == viewModel) {
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(WikiSearchResultViewModel.class);
-        }
     }
 
+
+    /**
+     * Intialize all the dependencies.
+     */
 
     @Override
     protected void initDependencies() {
@@ -148,6 +155,10 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     }
 
 
+    /**
+     *Listner to text changes, debounce operator used to manage the calls based on the time
+     *Avoids unneccesory calls for every text change.
+     */
     @SuppressLint("CheckResult")
     @OnTextChanged(R.id.edt_search_text)
     void onTextChanged() {
