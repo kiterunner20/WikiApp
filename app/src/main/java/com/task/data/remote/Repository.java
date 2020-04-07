@@ -23,7 +23,7 @@ public class Repository {
 
     public Single<WikiResult> getWikiData(String query) {
         return remoteService.getWikiData("query", "json", "pageimages|pageterms", "prefixsearch",
-                1, 2, "thumbnail", 50, 10, "description",
+                1, 2, "thumbnail", 200, 10, "description",
                 query, 10)
                 .subscribeOn(Schedulers.io())
                 .map(WikiDataListMapper.mapDtoDataToDomain())

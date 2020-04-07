@@ -19,8 +19,9 @@ public class Dependencies {
     private static final String GSON_VERSION = "2.8.2";
     private static final String GLIDE_VERSION = "4.11.0";
     private static final String AUTO_VALUE_VERSION = "1.6.2";
+    private static final String AUTO_VALUE_PARCEL_VERSION = "0.2.5";
+    private static final String AUTO_VALUE_COMPILER_VERSION = "1.0.0";
     private static final String ROOM_VERSION = "2.2.5";
-    private static final String SEARCHVIEW_VERSION = "1.4.0";
     private static final String COORDINATOR_VERSION = "1.1.0";
     private static final String METERIAL_DESIGN_VERSION = "1.0.0";
     private static final String STATESAVER_VERSION = "1.4.1";
@@ -69,9 +70,9 @@ public class Dependencies {
             "com.google.auto.value:auto-value:" + AUTO_VALUE_VERSION;
 
     public static final String AUTO_VALUE_ANNOTATION_PARSEL =
-            "com.ryanharter.auto.value:auto-value-parcel:0.2.5";
+            "com.ryanharter.auto.value:auto-value-parcel:" + AUTO_VALUE_PARCEL_VERSION;
     public static final String AUTOVALUE_WITH_COMPILER =
-            "com.gabrielittner.auto.value:auto-value-with:1.0.0";
+            "com.gabrielittner.auto.value:auto-value-with:" + AUTO_VALUE_COMPILER_VERSION;
 
     public static final String ROOM_DATABASE =
             "android.arch.persistence.room:runtime:" + ROOM_VERSION;
@@ -80,7 +81,6 @@ public class Dependencies {
 
     public static final String ROOM_RX_JAVA = "androidx.room:room-rxjava2:" + ROOM_VERSION;
 
-    public static final String METERIAL_SEARCHVIEW = "com.miguelcatalan:materialsearchview:" + SEARCHVIEW_VERSION;
 
     public static final String COORDINATOR_LAYOUT_VERSION = "androidx.coordinatorlayout:coordinatorlayout:" +
             COORDINATOR_VERSION;

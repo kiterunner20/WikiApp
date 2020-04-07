@@ -1,6 +1,8 @@
 package com.task.ui.searchlist;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.evernote.android.state.State;
+import com.jakewharton.rxbinding3.widget.RxTextView;
 import com.task.App;
 import com.task.R;
 import com.task.base.BaseFragment;
@@ -27,10 +30,13 @@ import com.task.ui.wikisourceview.WikiSourceWebViewFragment;
 import com.task.util.NetworkManager;
 
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnTextChanged;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class WikiSearchResultFragment extends BaseFragment implements WikiListAdapter.WikiResultItemSelectedListner {
 
@@ -51,7 +57,8 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     @Inject
     ViewModelFactory viewModelFactory;
     private WikiSearchResultViewModel viewModel;
-
+    @State
+    boolean isNoInput = false;
     WikiResult wikiResult;
     private WikiListAdapter adapter;
     @State
@@ -92,7 +99,11 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
                 case FAILED:
 
                     maintainUi(false, true, false);
-                    tvError.setText(wikiViewState.getError());
+                    if (isNoInput) {
+                        tvError.setVisibility(View.GONE);
+                    } else {
+                        tvError.setText(wikiViewState.getError());
+                    }
                     break;
                 case SUCCESS:
 
@@ -129,18 +140,31 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
 
     @Override
     protected void onReady(Bundle savedInstanceState) {
-        tvTitle.setText("Wikipedia");
+        tvTitle.setText(getString(R.string.title));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
 
     }
 
 
+    @SuppressLint("CheckResult")
     @OnTextChanged(R.id.edt_search_text)
     void onTextChanged() {
         if (etSearchText.getText().toString().length() > 0 && !etSearchText.getText().toString().equals(query)) {
-            query = etSearchText.getText().toString();
-            viewModel.getWikiData(query, NetworkManager.isNetworkAvailable(getContext()));
+            isNoInput = false;
+            RxTextView.textChanges(etSearchText)
+                    .debounce(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(string -> {
+                        query = etSearchText.getText().toString();
+                        viewModel.getWikiData(query, NetworkManager.isNetworkAvailable(getContext()));
+                    }, error -> {
+                        Log.e("ERROR", "ERROR LISTENING: " + error.getMessage());
+                    });
+
+        } else if (etSearchText.getText().toString().length() == 0) {
+            isNoInput = true;
         }
     }
 

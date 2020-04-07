@@ -67,7 +67,8 @@ dependencies {
     implementation Dependencies.METERIAL_DESIGN
     implementation Dependencies.ANDROID_STATESAVER
     annotationProcessor Dependencies.ANDROID_STATE_PROCESSOR
-
+    implementation Dependencies.RX_BINDING_CORE
+    implementation Dependencies.RX_BINDING_APP_COMPAT
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
 

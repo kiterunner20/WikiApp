@@ -34,7 +34,6 @@ public class WikiActivity extends BaseActivity {
     public void onReady() {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.frame_layout, WikiSearchResultFragment.newInstance())
-                .addToBackStack(WikiSearchResultFragment.class.getSimpleName())
                 .commit();
     }
 
