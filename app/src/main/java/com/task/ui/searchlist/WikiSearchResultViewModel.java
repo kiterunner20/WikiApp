@@ -10,9 +10,11 @@ import com.task.model.response.domain.WikiResult;
 import com.task.util.RxSingleSchedulers;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.disposables.Disposable;
 
+@Singleton
 public class WikiSearchResultViewModel extends BaseViewModel {
 
     private static final String TAG = WikiSearchResultViewModel.class.getSimpleName();
@@ -23,6 +25,8 @@ public class WikiSearchResultViewModel extends BaseViewModel {
 
     @Inject
     public WikiSearchResultViewModel(DataManager dataManager, RxSingleSchedulers rxSingleSchedulers) {
+
+        Log.d(TAG, "viewmodelCreated");
         this.dataManager = dataManager;
         this.rxSingleSchedulers = rxSingleSchedulers;
     }

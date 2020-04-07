@@ -23,6 +23,8 @@ public class Dependencies {
     private static final String SEARCHVIEW_VERSION = "1.4.0";
     private static final String COORDINATOR_VERSION = "1.1.0";
     private static final String METERIAL_DESIGN_VERSION = "1.0.0";
+    private static final String STATESAVER_VERSION = "1.4.1";
+    private static final String RX_BINDING = "3.0.0-alpha2";
 
     /**
      * Libraries
@@ -85,5 +87,10 @@ public class Dependencies {
 
     public static final String METERIAL_DESIGN = "com.google.android.material:material:" + METERIAL_DESIGN_VERSION;
 
-
+    public static final String ANDROID_STATESAVER = "com.evernote:android-state:" + STATESAVER_VERSION;
+    public static final String ANDROID_STATE_PROCESSOR = "com.evernote:android-state-processor:" + STATESAVER_VERSION;
+    public static final String RX_BINDING_CORE =
+            "com.jakewharton.rxbinding3:rxbinding-core:" + RX_BINDING;
+    public static final String RX_BINDING_APP_COMPAT =
+            "com.jakewharton.rxbinding3:rxbinding-appcompat:" + RX_BINDING;
 }

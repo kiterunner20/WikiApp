@@ -65,6 +65,8 @@ dependencies {
     implementation Dependencies.ROOM_RX_JAVA
     implementation Dependencies.COORDINATOR_LAYOUT_VERSION
     implementation Dependencies.METERIAL_DESIGN
+    implementation Dependencies.ANDROID_STATESAVER
+    annotationProcessor Dependencies.ANDROID_STATE_PROCESSOR
 
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 

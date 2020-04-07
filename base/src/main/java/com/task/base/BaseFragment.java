@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.evernote.android.state.StateSaver;
+
 import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
@@ -18,8 +20,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDependencies();
-
+        StateSaver.restoreInstanceState(this, savedInstanceState);
     }
 
     @Nullable
@@ -37,9 +38,15 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        StateSaver.saveInstanceState(this, outState);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initDependencies();
         initViewModels();
         initObservers();
         initDataCalls();

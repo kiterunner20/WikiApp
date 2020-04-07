@@ -47,4 +47,6 @@ dependencies {
     annotationProcessor Dependencies.BUTTER_KNIFE_ANNOTATION
     api Dependencies.RX_JAVA
     api Dependencies.RX_JAVA_ANDROID
+    implementation Dependencies.ANDROID_STATESAVER
+    annotationProcessor Dependencies.ANDROID_STATE_PROCESSOR
 }

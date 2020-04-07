@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.evernote.android.state.State;
 import com.task.App;
 import com.task.R;
 import com.task.base.BaseFragment;
@@ -50,9 +51,11 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     @Inject
     ViewModelFactory viewModelFactory;
     private WikiSearchResultViewModel viewModel;
-    private WikiResult wikiResult;
+
+    WikiResult wikiResult;
     private WikiListAdapter adapter;
-    boolean intialCacheLoading;
+    @State
+    String query;
 
     public static WikiSearchResultFragment newInstance() {
         Bundle args = new Bundle();
@@ -103,12 +106,6 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
                         }
                     }
 
-                    if (!intialCacheLoading) {
-                        if (etSearchText.getText().toString().length() == 0) {
-                            recyclerView.setVisibility(View.GONE);
-                        }
-                    }
-
                     break;
             }
 
@@ -119,7 +116,7 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
     @Override
     protected void initViewModels() {
         if (null == viewModel) {
-            viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WikiSearchResultViewModel.class);
+            viewModel = ViewModelProviders.of(this, viewModelFactory).get(WikiSearchResultViewModel.class);
         }
     }
 
@@ -141,12 +138,9 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
 
     @OnTextChanged(R.id.edt_search_text)
     void onTextChanged() {
-        if (etSearchText.getText().toString().length() > 0) {
-            String query = etSearchText.getText().toString();
+        if (etSearchText.getText().toString().length() > 0 && !etSearchText.getText().toString().equals(query)) {
+            query = etSearchText.getText().toString();
             viewModel.getWikiData(query, NetworkManager.isNetworkAvailable(getContext()));
-            intialCacheLoading = false;
-        } else {
-            recyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -168,7 +162,6 @@ public class WikiSearchResultFragment extends BaseFragment implements WikiListAd
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
         } else if (isSuccess) {
-
             recyclerView.setVisibility(View.VISIBLE);
             tvError.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
